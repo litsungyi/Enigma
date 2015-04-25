@@ -2,7 +2,12 @@
 
 This is a web-based "Enigma Simulator", reference come from below link.
 
-You can visit [This Project's GitHub Page](http://litsungyi.github.io/Enigma/) to try this. (Not Finished!, Edit 2015-04-24)
+You can visit [This Project's GitHub Page](http://litsungyi.github.io/Enigma/) to try this.
+
+![恩格瑪機](http://litsungyi.github.io/Enigma/images/EnigmaMachine.jpg)
+
+**NOTE**: This project was not finished! *Last edit 2015-04-25*
+
 
 ## Reference
 
@@ -80,4 +85,4 @@ You can visit [This Project's GitHub Page](http://litsungyi.github.io/Enigma/) t
 
 
 ----
-後略
+解碼部分省略
