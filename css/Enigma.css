@@ -80,7 +80,7 @@ H3
     background-color: yellow;
 }
 
-.Rotor, .Plugboard
+.Rotors, .Plugboard
 {
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
@@ -89,6 +89,11 @@ H3
     padding: .5em;
     border: thin solid black;
     float: left;
+}
+
+.Rotor
+{
+    width: 5em;
 }
 
 .RotorSelect

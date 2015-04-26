@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html ng-app="EnigmaApp" lang="en">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -16,6 +16,7 @@
     <link href="http://fonts.googleapis.com/css?family=Cuprum" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="css\Enigma.css" type="text/css" media="all" />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
     <script src="js\Enigma.js" type="text/javascript" charset="utf-8"></script>
     <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -26,26 +27,30 @@
   ga('create', 'UA-1062546-6', 'auto');
   ga('send', 'pageview');
     </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
   </head>
   <body>
     <div id="Background"></div>
-    <div id="Container">
+    <div id="Container" ng-controller="EnigmaController">
       <div class="ContainerTitle">
         <h1>Enigma Machine</h1>
       </div>
       
       <div class="ContainerBody">
+          <h2 title="Select a date to use the settings.">Setting</h2>
+          <div>
+              <input type="date" name="PasswordBook" id="PasswordBook" ng-model="date" />
+              <input type="button" ng-click="reset()" value="Set" />
+          </div>
           <h2>Rotors</h2>
           <div>
-            <span class="Rotor Rotor1">
-              <select name="Rotor" id="Rotor" class="RotorSelect">
-                  <option value="123">#1-#2-#3</option>
-                  <option value="132">#1-#3-#2</option>
-                  <option value="213">#2-#1-#3</option>
-                  <option value="231">#2-#3-#1</option>
-                  <option value="312">#3-#1-#2</option>
-                  <option value="321">#3-#2-#1</option>
-              </select>
+            <span class="Rotors">
+              <input type="text" name="Rotor1" id="Rotor1" class="Rotor" ng-model="rotor1" readonly />
+              <input type="text" name="RotorKey1" id="RotorKey1" class="Rotor" ng-model="rotorKey1" readonly />
+              <input type="text" name="Rotor2" id="Rotor2" class="Rotor" ng-model="rotor2" readonly />
+              <input type="text" name="RotorKey2" id="RotorKey2" class="Rotor" ng-model="rotorKey2" readonly />
+              <input type="text" name="Rotor3" id="Rotor3" class="Rotor" ng-model="rotor3" readonly />
+              <input type="text" name="RotorKey3" id="RotorKey3" class="Rotor" ng-model="rotorKey3" readonly />
             </span>
           </div>
         
@@ -53,39 +58,39 @@
           <div>
             <span class="Plugboard Plugboard1">
               <label for="Plugboard1">#1</label>
-              <input type="text" name="Plugboard1A" id="Plugboard1A" class="PlugboardSelect">
+              <input type="text" name="Plugboard1A" id="Plugboard1A" class="PlugboardSelect" ng-model="plugboard1A" readonly />
               <span class="fa fa-exchange"></span>
-              <input type="text" name="Plugboard1B" id="Plugboard1B" class="PlugboardSelect">
+              <input type="text" name="Plugboard1B" id="Plugboard1B" class="PlugboardSelect" ng-model="plugboard1B" readonly />
             </span>
             <span class="Plugboard Plugboard2">
               <label for="Plugboard2">#2</label>
-              <input type="text" name="Plugboard2A" id="Plugboard2A" class="PlugboardSelect">
+              <input type="text" name="Plugboard2A" id="Plugboard2A" class="PlugboardSelect" ng-model="plugboard2A" readonly />
               <span class="fa fa-exchange"></span>
-              <input type="text" name="Plugboard2B" id="Plugboard2B" class="PlugboardSelect">
+              <input type="text" name="Plugboard2B" id="Plugboard2B" class="PlugboardSelect" ng-model="plugboard2B" readonly />
             </span>
             <span class="Plugboard Plugboard3">
               <label for="Plugboard3">#3</label>
-              <input type="text" name="Plugboard3A" id="Plugboard3A" class="PlugboardSelect">
+              <input type="text" name="Plugboard3A" id="Plugboard3A" class="PlugboardSelect" ng-model="plugboard3A" readonly />
               <span class="fa fa-exchange"></span>
-              <input type="text" name="Plugboard3B" id="Plugboard3B" class="PlugboardSelect">
+              <input type="text" name="Plugboard3B" id="Plugboard3B" class="PlugboardSelect" ng-model="plugboard3B" readonly />
             </span>
             <span class="Plugboard Plugboard4">
               <label for="Plugboard4">#4</label>
-              <input type="text" name="Plugboard4A" id="Plugboard4A" class="PlugboardSelect">
+              <input type="text" name="Plugboard4A" id="Plugboard4A" class="PlugboardSelect" ng-model="plugboard4A" readonly />
               <span class="fa fa-exchange"></span>
-              <input type="text" name="Plugboard4B" id="Plugboard4B" class="PlugboardSelect">
+              <input type="text" name="Plugboard4B" id="Plugboard4B" class="PlugboardSelect" ng-model="plugboard4B" readonly />
             </span>
             <span class="Plugboard Plugboard5">
               <label for="Plugboard5">#5</label>
-              <input type="text" name="Plugboard5A" id="Plugboard5A" class="PlugboardSelect">
+              <input type="text" name="Plugboard5A" id="Plugboard5A" class="PlugboardSelect" ng-model="plugboard5A" readonly />
               <span class="fa fa-exchange"></span>
-              <input type="text" name="Plugboard5B" id="Plugboard5B" class="PlugboardSelect">
+              <input type="text" name="Plugboard5B" id="Plugboard5B" class="PlugboardSelect" ng-model="plugboard5B" readonly />
             </span>
             <span class="Plugboard Plugboard6">
               <label for="Plugboard6">#6</label>
-              <input type="text" name="Plugboard6A" id="Plugboard6A" class="PlugboardSelect">
+              <input type="text" name="Plugboard6A" id="Plugboard6A" class="PlugboardSelect" ng-model="plugboard6A" readonly />
               <span class="fa fa-exchange"></span>
-              <input type="text" name="Plugboard6B" id="Plugboard6B" class="PlugboardSelect">
+              <input type="text" name="Plugboard6B" id="Plugboard6B" class="PlugboardSelect" ng-model="plugboard6B" readonly />
             </span>
           </div>
       
