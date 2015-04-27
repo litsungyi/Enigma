@@ -156,18 +156,18 @@
           
           <h2>Key</h2>
           <div class="KeyDiv">
-              <input type="text" name="Key" id="Key" class="Key" ng-model="key" />
+              <input type="text" name="Key" id="Key" class="Key" ng-model="key" readonly />
           </div>
           
           <h2>Encode/Decode</h2>
           <div class="MessageDiv">
               <h3><span class="fa fa-comment"></span>Message</h3>
-              <textarea name="MessageA" id="MessageA" class="Message">Hello</textarea>
+              <textarea name="MessageA" id="MessageA" class="Message" ng-model="message">Hello</textarea>
               <input type="button" ng-click="encode()" value="Encode" />
           </div>
           <div class="MessageDiv">
               <h3><span class="fa fa-code"></span>Code</h3>
-              <textarea name="MessageB" id="MessageB" class="Message"></textarea>
+              <textarea name="MessageB" id="MessageB" class="Message" ng-model="code"></textarea>
               <input type="button" ng-click="decode()" value="Decode" />
           </div>
       </div>

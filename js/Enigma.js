@@ -6,6 +6,7 @@ Math.seed = function(s) {
     };
 };
 
+var chA = "A".charCodeAt(0);
 var enigmaApp = angular.module('EnigmaApp', []);
 enigmaApp.controller('EnigmaController', ['$scope', function ($scope) {
   $scope.date = "";
@@ -29,20 +30,28 @@ enigmaApp.controller('EnigmaController', ['$scope', function ($scope) {
   $scope.plugboard6B = "";
   $scope.rotorTrans = [];
   $scope.reset = function() {
-      var initRandom = Math.seed( seed );
-      $scope.rotorTrans[0] = MakeRotor(initRandom);
+      var initRandom = Math.seed( 42 );
+       $scope.rotorTrans[1] =[];
       $scope.rotorTrans[1] = MakeRotor(initRandom);
       $scope.rotorTrans[2] = MakeRotor(initRandom);
+      $scope.rotorTrans[3] = MakeRotor(initRandom);
+      $scope.key = MakeKey(initRandom);
       
       var seed = Date.parse( $scope.date);
+      if (isNaN(seed) )
+      {
+          $scope.date = new Date();
+          seed = Date.parse( $scope.date);
+      }
+      
       var random = Math.seed( seed );
       var rotors = RandomSort( random );
       $scope.rotor1 = rotors[0] + 1;
       $scope.rotor2 = rotors[1] + 1;
       $scope.rotor3 = rotors[2] + 1;
-      $scope.rotorKey1 = String.fromCharCode( Math.floor( random() * 26 ) + "A".charCodeAt(0));
-      $scope.rotorKey2 = String.fromCharCode( Math.floor( random() * 26 ) + "A".charCodeAt(0));
-      $scope.rotorKey3 = String.fromCharCode( Math.floor( random() * 26 ) + "A".charCodeAt(0));
+      $scope.rotorKey1 = String.fromCharCode( Math.floor( random() * 26 ) + chA);
+      $scope.rotorKey2 = String.fromCharCode( Math.floor( random() * 26 ) + chA);
+      $scope.rotorKey3 = String.fromCharCode( Math.floor( random() * 26 ) + chA);
       var keys = RandomSortAZ( random );
       $scope.plugboard1A = keys[0];
       $scope.plugboard1B = keys[1];
@@ -60,7 +69,14 @@ enigmaApp.controller('EnigmaController', ['$scope', function ($scope) {
   $scope.encode = function() {
       $scope.reset();
       
+      var code ="";
+      $scope.message = $scope.message.toUpperCase();
+      for( var i = 0; i<$scope.message.length; ++i)
+      {
+          code += Encode( $scope,  $scope.message[i] );
+      }
       
+      $scope.code = code;
   }
   $scope.decode = function() {
       $scope.reset();
@@ -109,4 +125,91 @@ function MakeRotor( random )
     }
     
     return rotor;
+}
+
+function MakeKey( random )
+{
+    var keys = RandomSortAZ( random );
+    return keys[0] +keys[1] +keys[2];
+}
+
+function Encode( $scope, ch )
+{
+    if ( !/^[A-Z]+$/i.test( ch ) )
+    {
+        return "";
+    }
+    
+    ch = TransformPlugboard( $scope, ch );
+    ch = TransformRotor( $scope, $scope.rotor1, ch );
+    ch = TransformRotor( $scope, $scope.rotor2, ch );
+    ch = TransformRotor( $scope, $scope.rotor3, ch );
+    AdvanceRotor( $scope );
+    return ch;
+}
+
+function TransformPlugboard( $scope, ch )
+{
+    if ( ch == $scope.plugboard1A )
+    {
+        return $scope.plugboard1B;
+    }
+    else if ( ch == $scope.plugboard1B )
+    {
+        return $scope.plugboard1A;
+    }
+    else if ( ch == $scope.plugboard2A )
+    {
+        return $scope.plugboard2B;
+    }
+    else if ( ch == $scope.plugboard2B )
+    {
+        return $scope.plugboard2A;
+    }
+    else if ( ch == $scope.plugboard3A )
+    {
+        return $scope.plugboard3B;
+    }
+    else if ( ch == $scope.plugboard3B )
+    {
+        return $scope.plugboard3A;
+    }
+    else if ( ch == $scope.plugboard4A )
+    {
+        return $scope.plugboard4B;
+    }
+    else if ( ch == $scope.plugboard4B )
+    {
+        return $scope.plugboard4A;
+    }
+    else if ( ch == $scope.plugboard5A )
+    {
+        return $scope.plugboard5B;
+    }
+    else if ( ch == $scope.plugboard5B )
+    {
+        return $scope.plugboard5A;
+    }
+    else if ( ch == $scope.plugboard6A )
+    {
+        return $scope.plugboard6B;
+    }
+    else if ( ch == $scope.plugboard6B )
+    {
+        return $scope.plugboard6A;
+    }
+    else
+    {
+        return ch;
+    }
+}
+
+function TransformRotor( $scope, rotor, ch )
+{
+    
+}
+
+function AdvanceRotor( $scope )
+{
+    
 }
