@@ -29,6 +29,7 @@ enigmaApp.controller('EnigmaController', ['$scope', function ($scope) {
     $scope.plugboard6A = "";
     $scope.plugboard6B = "";
     $scope.rotorTrans = [];
+    $scope.reflector = {};
     $scope.key = "";
     $scope.message = "HELLO";
     $scope.code = "";
@@ -38,6 +39,7 @@ enigmaApp.controller('EnigmaController', ['$scope', function ($scope) {
         $scope.rotorTrans[1] = MakeRotor(initRandom);
         $scope.rotorTrans[2] = MakeRotor(initRandom);
         $scope.rotorTrans[3] = MakeRotor(initRandom);
+        $scope.reflector = MakeReflector(initRandom);
         $scope.key = MakeKey(initRandom);
 
         var seed = Date.parse($scope.date);
@@ -71,18 +73,23 @@ enigmaApp.controller('EnigmaController', ['$scope', function ($scope) {
     $scope.encode = function () {
         $scope.reset();
 
-        var code = transformKey();
+        var code = $scope.transformKey();
         $scope.message = $scope.message.toUpperCase();
         for (var i = 0; i < $scope.message.length; ++i) {
             var ch = $scope.message[i];
             if (!/^[A-Z]+$/i.test(ch)) {
+                code += " ";
                 continue;
             }
 
             ch = $scope.transformPlugboard(ch);
-            ch = $scope.transformRotor($scope.rotor1, ch);
-            ch = $scope.transformRotor($scope.rotor2, ch);
-            ch = $scope.transformRotor($scope.rotor3, ch);
+            ch = $scope.transformRotor($scope.rotorTrans[$scope.rotor1], $scope.rotorKey1, ch);
+            ch = $scope.transformRotor($scope.rotorTrans[$scope.rotor2], $scope.rotorKey2, ch);
+            ch = $scope.transformRotor($scope.rotorTrans[$scope.rotor3], $scope.rotorKey3, ch);
+            ch = $scope.transformReflector(ch);
+            ch = $scope.transformRotor($scope.rotorTrans[$scope.rotor3], $scope.rotorKey3, ch);
+            ch = $scope.transformRotor($scope.rotorTrans[$scope.rotor2], $scope.rotorKey2, ch);
+            ch = $scope.transformRotor($scope.rotorTrans[$scope.rotor1], $scope.rotorKey1, ch);
             $scope.advanceRotor();
 
             code += ch;
@@ -92,28 +99,92 @@ enigmaApp.controller('EnigmaController', ['$scope', function ($scope) {
     };
     $scope.decode = function () {
         $scope.reset();
+        
+        var message = "";
+        var key2 = "";
+        $scope.key = "";
+        $scope.code = $scope.code.toUpperCase();
+        var keyRead = 0;
+        var keyRead2 = 0;
+        for (var i = 0; i < $scope.code.length; ++i) {
+            var ch = $scope.code[i];
+            if (!/^[A-Z]+$/i.test(ch)) {
+                message += " ";
+                continue;
+            }
+            
+            if ( keyRead < 3 )
+            {
+                $scope.key += ch;
+                ++ keyRead;
+                
+                if ( keyRead == 3 )
+                {
+                    $scope.rotorKey1 = $scope.key[0];
+                    $scope.rotorKey2 = $scope.key[1];
+                    $scope.rotorKey3 = $scope.key[2];
+                }
+                continue;
+            }
+            
+            ch = $scope.transformRotor($scope.rotorTrans[$scope.rotor1], $scope.rotorKey1, ch);
+            ch = $scope.transformRotor($scope.rotorTrans[$scope.rotor2], $scope.rotorKey2, ch);
+            ch = $scope.transformRotor($scope.rotorTrans[$scope.rotor3], $scope.rotorKey3, ch);
+            ch = $scope.transformReflector(ch);
+            ch = $scope.transformRotor($scope.rotorTrans[$scope.rotor3], $scope.rotorKey3, ch);
+            ch = $scope.transformRotor($scope.rotorTrans[$scope.rotor2], $scope.rotorKey2, ch);
+            ch = $scope.transformRotor($scope.rotorTrans[$scope.rotor1], $scope.rotorKey1, ch);
+            ch = $scope.transformPlugboard(ch);
+            $scope.advanceRotor();
 
+            if ( keyRead2 < 6 )
+            {
+                key2 += ch;
+                ++ keyRead2;
+                
+                if ( keyRead2 == 6 )
+                {
+                    $scope.rotorKey1 = key2[0];
+                    $scope.rotorKey2 = key2[1];
+                    $scope.rotorKey3 = key2[2];
+                }
+            }
+            else
+            {
+                message += ch;
+            }
+        }
 
+        $scope.message = message;
     };
     $scope.transformKey = function () {
         var key = $scope.key.toUpperCase();
-        var code = key;
-        for (var i = 0; i < key.length; ++i) {
-            var ch = key[i];
-            if (!/^[A-Z]+$/i.test(ch)) {
-                continue;
+        var code = key + " ";
+        for ( var j = 0; j < 2; ++j) {
+            for (var i = 0; i < key.length; ++i) {
+                var ch = key[i];
+                if (!/^[A-Z]+$/i.test(ch)) {
+                    continue;
+                }
+    
+                ch = $scope.transformPlugboard(ch);
+                ch = $scope.transformRotor($scope.rotorTrans[$scope.rotor1], $scope.rotorKey1, ch);
+                ch = $scope.transformRotor($scope.rotorTrans[$scope.rotor2], $scope.rotorKey2, ch);
+                ch = $scope.transformRotor($scope.rotorTrans[$scope.rotor3], $scope.rotorKey3, ch);
+                ch = $scope.transformReflector(ch);
+                ch = $scope.transformRotor($scope.rotorTrans[$scope.rotor3], $scope.rotorKey3, ch);
+                ch = $scope.transformRotor($scope.rotorTrans[$scope.rotor2], $scope.rotorKey2, ch);
+                ch = $scope.transformRotor($scope.rotorTrans[$scope.rotor1], $scope.rotorKey1, ch);
+                $scope.advanceRotor();
+    
+                code += ch;
             }
-
-            ch = $scope.transformPlugboard(ch);
-            ch = $scope.transformRotor($scope.rotor1, ch);
-            ch = $scope.transformRotor($scope.rotor2, ch);
-            ch = $scope.transformRotor($scope.rotor3, ch);
-            $scope.advanceRotor();
-
-            code += ch;
         }
-
-        return code;
+        
+        $scope.rotorKey1 = key[0];
+        $scope.rotorKey2 = key[1];
+        $scope.rotorKey3 = key[2];
+        return code + " ";
     };
     $scope.transformPlugboard = function (ch) {
         if (ch == $scope.plugboard1A) {
@@ -156,11 +227,45 @@ enigmaApp.controller('EnigmaController', ['$scope', function ($scope) {
             return ch;
         }
     };
-    $scope.transformRotor = function (rotor, ch) {
-
+    $scope.transformRotor = function (rotor, key, ch) {
+        var offset = key.charCodeAt(0) - chA;
+        var index = ( ch.charCodeAt(0) - chA + offset ) % 26;
+        var alpha = String.fromCharCode( index + chA );
+        return rotor[alpha];
+    };
+    $scope.transformReflector = function(ch) {
+        return  $scope.reflector[ch];
     };
     $scope.advanceRotor = function () {
-
+        var next = $scope.rotorKey1.charCodeAt(0) - chA + 1;
+        if ( next < 26 )
+        {
+            $scope.rotorKey1 = String.fromCharCode( next + chA );
+            return;
+        }
+            
+        next = 0;
+        $scope.rotorKey1 = String.fromCharCode( next + chA );
+        
+        next = $scope.rotorKey2.charCodeAt(0) - chA + 1;
+        if ( next < 26 )
+        {
+            $scope.rotorKey2 = String.fromCharCode( next + chA );
+            return;
+        }
+        
+        next = 0;
+        $scope.rotorKey2 = String.fromCharCode( next + chA );
+        
+        next = $scope.rotorKey3.charCodeAt(0) - chA + 1;
+        if ( next < 26 )
+        {
+            $scope.rotorKey3 = String.fromCharCode( next + chA );
+            return;
+        }
+        
+        next = 0;
+        $scope.rotorKey3 = String.fromCharCode( next + chA );
     }
 }]);
 
@@ -191,6 +296,19 @@ function RandomSortAZ(random) {
 }
 
 function MakeRotor(random) {
+    var keys = RandomSortAZ(random);
+    var rotor = {};
+    for (var count = 0; count < 26; count += 2) {
+        var key1 = keys[count];
+        var key2 = keys[count + 1];
+        rotor[key1] = key2;
+        rotor[key2] = key1;
+    }
+
+    return rotor;
+}
+
+function MakeReflector(random) {
     var keys = RandomSortAZ(random);
     var rotor = {};
     for (var count = 0; count < 26; count += 2) {
