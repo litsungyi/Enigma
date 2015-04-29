@@ -1,11 +1,9 @@
-BODY
-{
+BODY {
     font-family: 'Cuprum', sans-serif;
     /* Image Source: https://www.flickr.com/photos/visualtheology */
 }
 
-H1
-{
+H1 {
     font-size: 4em;
     font-weight: bolder;
     text-shadow: .1em .1em .1em rgba(50, 50, 50, 1);
@@ -13,21 +11,18 @@ H1
     color: lightgray;
 }
 
-H2
-{
+H2 {
     font-size: 1.5em;
     line-height: 2.5em;
     clear: both;
 }
 
-H3
-{
+H3 {
     font-size: 1.25em;
     font-weight: bold;
 }
 
-#Background
-{
+#Background {
     position: fixed;
     top: 0%;
     left: 0%;
@@ -40,22 +35,19 @@ H3
     background-position: center;
 }
 
-#Container
-{
+#Container {
     position: absolute;
     left: 0%;
     width: 100%;
     height: 100%;
 }
 
-.ContainerTitle
-{
+.ContainerTitle {
     height: 100px;
     vertical-align: middle;
 }
 
-.ContainerBody
-{
+.ContainerBody {
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
@@ -64,8 +56,7 @@ H3
     background-color: rgba(100, 100, 100, 0.9);
 }
 
-.Lampboard, .Keyboard
-{
+.Lampboard, .Keyboard {
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
@@ -75,13 +66,11 @@ H3
     float: left;
 }
 
-.Lampboard:hover, .Keyboard:hover
-{
-    background-color: yellow;
-}
+    .Lampboard:hover, .Keyboard:hover {
+        background-color: yellow;
+    }
 
-.Rotors, .Plugboard
-{
+.Rotors, .Plugboard {
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
@@ -91,30 +80,25 @@ H3
     float: left;
 }
 
-.Rotor
-{
+.Rotor {
     width: 5em;
 }
 
-.RotorSelect
-{
+.RotorSelect {
     width: 6em;
 }
 
-.PlugboardSelect
-{
+.PlugboardSelect {
     width: 3em;
 }
 
-.MessageDiv
-{
+.MessageDiv {
     width: 45%;
     float: left;
     margin: 0% 1%;
 }
 
-.Message
-{
+.Message {
     height: 10em;
     width: 100%;
 }

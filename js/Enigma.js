@@ -111,15 +111,15 @@ enigmaApp.controller('EnigmaController', ['$scope', '$log', function ($scope, $l
                     $scope.rotorKey[0] = key[0];
                     $scope.rotorKey[1] = key[1];
                     $scope.rotorKey[2] = key[2];
-                    
-                    if ( key[0] != key[3] ||key[1] != key[4] || key[2] != key[5]) {
-                        alert( "[ERROR] Key not match: " + key );
+
+                    if (key[0] != key[3] || key[1] != key[4] || key[2] != key[5]) {
+                        alert("[ERROR] Key not match: " + key);
                     }
                 }
-                
+
                 continue;
             }
-            
+
             message += ch;
         }
 
@@ -132,34 +132,34 @@ enigmaApp.controller('EnigmaController', ['$scope', '$log', function ($scope, $l
             var chFrom = String.fromCharCode(i + chA);
             var chTo = $scope.transformPlugboard(chFrom);
             var chBack = $scope.transformPlugboard(chTo);
-            
-            if ( chFrom != chBack){
-                alert( "Plugboard Error!" );
+
+            if (chFrom != chBack) {
+                alert("Plugboard Error!");
             }
         }
-        alert( "Plugboard Test Done!" );
-        
+        alert("Plugboard Test Done!");
+
         for (var i = 0; i < 26; ++i) {
             var chFrom = String.fromCharCode(i + chA);
-            var chTo =  $scope.transformReflector(chFrom);
-            var chBack =  $scope.transformReflector(chTo);
-        
-            if ( chFrom != chBack){
-                alert( "Reflector Error!" );
+            var chTo = $scope.transformReflector(chFrom);
+            var chBack = $scope.transformReflector(chTo);
+
+            if (chFrom != chBack) {
+                alert("Reflector Error!");
             }
         }
-        alert( "Reflector Test Done!" );
-        
+        alert("Reflector Test Done!");
+
         for (var i = 0; i < 26; ++i) {
             var chFrom = String.fromCharCode(i + chA);
-            var chTo =  $scope.transformRotor($scope.rotorTrans[0], "A", chFrom);
-            var chBack =  $scope.transformRotor($scope.rotorTrans[0], "A", chTo);
-        
-            if ( chFrom != chBack){
-                alert( "Rotor Error!" );
+            var chTo = $scope.transformRotor($scope.rotorTrans[0], "A", chFrom);
+            var chBack = $scope.transformRotor($scope.rotorTrans[0], "A", chTo);
+
+            if (chFrom != chBack) {
+                alert("Rotor Error!");
             }
         }
-        alert( "Rotor Test Done!" );
+        alert("Rotor Test Done!");
     };
     $scope.encodeKey = function () {
         var key = $scope.key.toUpperCase();
