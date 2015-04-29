@@ -6,6 +6,8 @@ You can visit [This Project's GitHub Page](http://litsungyi.github.io/Enigma/) t
 
 ![恩格瑪機](http://litsungyi.github.io/Enigma/images/EnigmaMachine.jpg)
 
+(Image Source: [Flickr](https://www.flickr.com/photos/visualtheology))
+
 **NOTE**: This project was not finished! *Last edit 2015-04-25*
 
 
@@ -21,13 +23,19 @@ You can visit [This Project's GitHub Page](http://litsungyi.github.io/Enigma/) t
 > * 轉子（Rotor）：是進行加密的部件。
 > * 插線板（Plugboard）：將輸入的字母替换成了別的字母。
 
-![恩格瑪機](http://pic4.zhimg.com/b994b03240dcbf636431c9f13844e463_b.jpg)
+![恩格瑪機](http://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/EnigmaMachineLabeled.jpg/640px-EnigmaMachineLabeled.jpg)
+
+(Image Source: [Wiki](http://en.wikipedia.org/wiki/Enigma_machine))
+
 
 ### 性質
 > 1. 反射器使得恩格瑪機的加密過程是自反的。
 > 2. 一個字母加密後的輸出結果絕不會是它自身。
 
 ![流程](http://pic2.zhimg.com/222bc15f8af8ba7e60ad31e836cf0a99_b.jpg)
+
+(Image Source: [知乎](http://en.wikipedia.org/wiki/Enigma_rotor_details))
+
 
 ### 轉子
 > * 單個轉子對輸入內容所做的本質上是一次單字母替換加密
@@ -36,6 +44,10 @@ You can visit [This Project's GitHub Page](http://litsungyi.github.io/Enigma/) t
 >   * 每輸入一個字母之後，第一個轉子會自動轉動一格。
 >   * 第一個轉子轉完一圈後，會帶動第二個轉子轉動一格。
 >   * 第二個轉子轉完一圈後，會帶動第三個轉子轉動一格。
+
+![轉子細節](http://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Enigma-action.svg/400px-Enigma-action.svg.png)
+
+(Image Source: [Wiki](http://en.wikipedia.org/wiki/Enigma_machine))
 
 
 ### 密碼本
