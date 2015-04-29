@@ -8,14 +8,13 @@ Math.seed = function (s) {
 
 var chA = "A".charCodeAt(0);
 var enigmaApp = angular.module('EnigmaApp', []);
-enigmaApp.controller('EnigmaController', ['$scope', function ($scope) {
+enigmaApp.controller('EnigmaController', ['$scope', '$log', function ($scope, $log) {
+    $scope.$log = $log;
     $scope.date = "";
     $scope.rotor1 = 0;
     $scope.rotor2 = 0;
     $scope.rotor3 = 0;
-    $scope.rotorKey1 = "";
-    $scope.rotorKey2 = "";
-    $scope.rotorKey3 = "";
+    $scope.rotorKey = [];
     $scope.plugboard1A = "";
     $scope.plugboard1B = "";
     $scope.plugboard2A = "";
@@ -53,9 +52,9 @@ enigmaApp.controller('EnigmaController', ['$scope', function ($scope) {
         $scope.rotor1 = rotors[0] + 1;
         $scope.rotor2 = rotors[1] + 1;
         $scope.rotor3 = rotors[2] + 1;
-        $scope.rotorKey1 = String.fromCharCode(Math.floor(random() * 26) + chA);
-        $scope.rotorKey2 = String.fromCharCode(Math.floor(random() * 26) + chA);
-        $scope.rotorKey3 = String.fromCharCode(Math.floor(random() * 26) + chA);
+        $scope.rotorKey[0] = String.fromCharCode(Math.floor(random() * 26) + chA);
+        $scope.rotorKey[1] = String.fromCharCode(Math.floor(random() * 26) + chA);
+        $scope.rotorKey[2] = String.fromCharCode(Math.floor(random() * 26) + chA);
         var keys = RandomSortAZ(random);
         $scope.plugboard1A = keys[0];
         $scope.plugboard1B = keys[1];
@@ -82,14 +81,26 @@ enigmaApp.controller('EnigmaController', ['$scope', function ($scope) {
                 continue;
             }
 
+            $log.log( "encode=========" );
+            $log.log( ch );
             ch = $scope.transformPlugboard(ch);
-            ch = $scope.transformRotor($scope.rotorTrans[$scope.rotor1], $scope.rotorKey1, ch);
-            ch = $scope.transformRotor($scope.rotorTrans[$scope.rotor2], $scope.rotorKey2, ch);
-            ch = $scope.transformRotor($scope.rotorTrans[$scope.rotor3], $scope.rotorKey3, ch);
+            $log.log( "transformPlugboard: " + ch );
+            ch = $scope.transformRotor($scope.rotorTrans[$scope.rotor1], $scope.rotorKey[0], ch);
+            $log.log( "transformRotor1: " + ch );
+            ch = $scope.transformRotor($scope.rotorTrans[$scope.rotor2], $scope.rotorKey[1], ch);
+            $log.log( "transformRotor2: " + ch );
+            ch = $scope.transformRotor($scope.rotorTrans[$scope.rotor3], $scope.rotorKey[2], ch);
+            $log.log( "transformRotor3: " + ch );
             ch = $scope.transformReflector(ch);
-            ch = $scope.transformRotor($scope.rotorTrans[$scope.rotor3], $scope.rotorKey3, ch);
-            ch = $scope.transformRotor($scope.rotorTrans[$scope.rotor2], $scope.rotorKey2, ch);
-            ch = $scope.transformRotor($scope.rotorTrans[$scope.rotor1], $scope.rotorKey1, ch);
+            $log.log( "transformReflector: " + ch );
+            ch = $scope.transformRotor($scope.rotorTrans[$scope.rotor3], $scope.rotorKey[2], ch);
+            $log.log( "transformRotor3: " + ch );
+            ch = $scope.transformRotor($scope.rotorTrans[$scope.rotor2], $scope.rotorKey[1], ch);
+            $log.log( "transformRotor2: " + ch );
+            ch = $scope.transformRotor($scope.rotorTrans[$scope.rotor1], $scope.rotorKey[0], ch);
+            $log.log( "transformRotor1: " + ch );
+            ch = $scope.transformPlugboard(ch);
+            $log.log( "transformPlugboard: " + ch );
             $scope.advanceRotor();
 
             code += ch;
@@ -120,21 +131,33 @@ enigmaApp.controller('EnigmaController', ['$scope', function ($scope) {
                 
                 if ( keyRead == 3 )
                 {
-                    $scope.rotorKey1 = $scope.key[0];
-                    $scope.rotorKey2 = $scope.key[1];
-                    $scope.rotorKey3 = $scope.key[2];
+                    $scope.rotorKey[0] = $scope.key[0];
+                    $scope.rotorKey[1] = $scope.key[1];
+                    $scope.rotorKey[2] = $scope.key[2];
                 }
                 continue;
             }
             
-            ch = $scope.transformRotor($scope.rotorTrans[$scope.rotor1], $scope.rotorKey1, ch);
-            ch = $scope.transformRotor($scope.rotorTrans[$scope.rotor2], $scope.rotorKey2, ch);
-            ch = $scope.transformRotor($scope.rotorTrans[$scope.rotor3], $scope.rotorKey3, ch);
-            ch = $scope.transformReflector(ch);
-            ch = $scope.transformRotor($scope.rotorTrans[$scope.rotor3], $scope.rotorKey3, ch);
-            ch = $scope.transformRotor($scope.rotorTrans[$scope.rotor2], $scope.rotorKey2, ch);
-            ch = $scope.transformRotor($scope.rotorTrans[$scope.rotor1], $scope.rotorKey1, ch);
+            $log.log( "decode=========" );
+            $log.log( ch );
             ch = $scope.transformPlugboard(ch);
+            $log.log( "transformPlugboard: " + ch );
+            ch = $scope.transformRotor($scope.rotorTrans[$scope.rotor1], $scope.rotorKey[0], ch);
+            $log.log( "transformRotor1: " + ch );
+            ch = $scope.transformRotor($scope.rotorTrans[$scope.rotor2], $scope.rotorKey[1], ch);
+            $log.log( "transformRotor2: " + ch );
+            ch = $scope.transformRotor($scope.rotorTrans[$scope.rotor3], $scope.rotorKey[2], ch);
+            $log.log( "transformRotor3: " + ch );
+            ch = $scope.transformReflector(ch);
+            $log.log( "transformReflector: " + ch );
+            ch = $scope.transformRotor($scope.rotorTrans[$scope.rotor3], $scope.rotorKey[2], ch);
+            $log.log( "transformRotor3: " + ch );
+            ch = $scope.transformRotor($scope.rotorTrans[$scope.rotor2], $scope.rotorKey[1], ch);
+            $log.log( "transformRotor2: " + ch );
+            ch = $scope.transformRotor($scope.rotorTrans[$scope.rotor1], $scope.rotorKey[0], ch);
+            $log.log( "transformRotor1: " + ch );
+            ch = $scope.transformPlugboard(ch);
+            $log.log( "transformPlugboard: " + ch );
             $scope.advanceRotor();
 
             if ( keyRead2 < 6 )
@@ -144,9 +167,9 @@ enigmaApp.controller('EnigmaController', ['$scope', function ($scope) {
                 
                 if ( keyRead2 == 6 )
                 {
-                    $scope.rotorKey1 = key2[0];
-                    $scope.rotorKey2 = key2[1];
-                    $scope.rotorKey3 = key2[2];
+                    $scope.rotorKey[0] = key2[0];
+                    $scope.rotorKey[1] = key2[1];
+                    $scope.rotorKey[2] = key2[2];
                 }
             }
             else
@@ -167,23 +190,35 @@ enigmaApp.controller('EnigmaController', ['$scope', function ($scope) {
                     continue;
                 }
     
+                $log.log( "transformKey=========" );
+                $log.log( ch );
                 ch = $scope.transformPlugboard(ch);
-                ch = $scope.transformRotor($scope.rotorTrans[$scope.rotor1], $scope.rotorKey1, ch);
-                ch = $scope.transformRotor($scope.rotorTrans[$scope.rotor2], $scope.rotorKey2, ch);
-                ch = $scope.transformRotor($scope.rotorTrans[$scope.rotor3], $scope.rotorKey3, ch);
+                $log.log( ch );
+                ch = $scope.transformRotor($scope.rotorTrans[$scope.rotor1], $scope.rotorKey[0], ch);
+                $log.log( ch );
+                ch = $scope.transformRotor($scope.rotorTrans[$scope.rotor2], $scope.rotorKey[1], ch);
+                $log.log( ch );
+                ch = $scope.transformRotor($scope.rotorTrans[$scope.rotor3], $scope.rotorKey[2], ch);
+                $log.log( ch );
                 ch = $scope.transformReflector(ch);
-                ch = $scope.transformRotor($scope.rotorTrans[$scope.rotor3], $scope.rotorKey3, ch);
-                ch = $scope.transformRotor($scope.rotorTrans[$scope.rotor2], $scope.rotorKey2, ch);
-                ch = $scope.transformRotor($scope.rotorTrans[$scope.rotor1], $scope.rotorKey1, ch);
+                $log.log( ch );
+                ch = $scope.transformRotor($scope.rotorTrans[$scope.rotor3], $scope.rotorKey[2], ch);
+                $log.log( ch );
+                ch = $scope.transformRotor($scope.rotorTrans[$scope.rotor2], $scope.rotorKey[1], ch);
+                $log.log( ch );
+                ch = $scope.transformRotor($scope.rotorTrans[$scope.rotor1], $scope.rotorKey[0], ch);
+                $log.log( ch );
+                ch = $scope.transformPlugboard(ch);
+                $log.log( ch );
                 $scope.advanceRotor();
     
                 code += ch;
             }
         }
         
-        $scope.rotorKey1 = key[0];
-        $scope.rotorKey2 = key[1];
-        $scope.rotorKey3 = key[2];
+        $scope.rotorKey[0] = key[0];
+        $scope.rotorKey[1] = key[1];
+        $scope.rotorKey[2] = key[2];
         return code + " ";
     };
     $scope.transformPlugboard = function (ch) {
@@ -237,35 +272,35 @@ enigmaApp.controller('EnigmaController', ['$scope', function ($scope) {
         return  $scope.reflector[ch];
     };
     $scope.advanceRotor = function () {
-        var next = $scope.rotorKey1.charCodeAt(0) - chA + 1;
+        var next = $scope.rotorKey[0].charCodeAt(0) - chA + 1;
         if ( next < 26 )
         {
-            $scope.rotorKey1 = String.fromCharCode( next + chA );
+            $scope.rotorKey[0] = String.fromCharCode( next + chA );
             return;
         }
             
         next = 0;
-        $scope.rotorKey1 = String.fromCharCode( next + chA );
+        $scope.rotorKey[0] = String.fromCharCode( next + chA );
         
-        next = $scope.rotorKey2.charCodeAt(0) - chA + 1;
+        next = $scope.rotorKey[1].charCodeAt(0) - chA + 1;
         if ( next < 26 )
         {
-            $scope.rotorKey2 = String.fromCharCode( next + chA );
+            $scope.rotorKey[1] = String.fromCharCode( next + chA );
             return;
         }
         
         next = 0;
-        $scope.rotorKey2 = String.fromCharCode( next + chA );
+        $scope.rotorKey[1] = String.fromCharCode( next + chA );
         
-        next = $scope.rotorKey3.charCodeAt(0) - chA + 1;
+        next = $scope.rotorKey[2].charCodeAt(0) - chA + 1;
         if ( next < 26 )
         {
-            $scope.rotorKey3 = String.fromCharCode( next + chA );
+            $scope.rotorKey[2] = String.fromCharCode( next + chA );
             return;
         }
         
         next = 0;
-        $scope.rotorKey3 = String.fromCharCode( next + chA );
+        $scope.rotorKey[2] = String.fromCharCode( next + chA );
     }
 }]);
 
