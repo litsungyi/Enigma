@@ -10,7 +10,7 @@ var chA = "A".charCodeAt(0);
 var enigmaApp = angular.module('EnigmaApp', []);
 enigmaApp.controller('EnigmaController', ['$scope', '$log', function ($scope, $log) {
     $scope.$log = $log;
-    $scope.date = "";
+    $scope.date = new Date();
     $scope.rotor = [];
     $scope.rotorKey = [];
     $scope.plugboard1A = "";
@@ -39,17 +39,18 @@ enigmaApp.controller('EnigmaController', ['$scope', '$log', function ($scope, $l
         $scope.reflector = MakeReflector(initRandom);
         $scope.key = MakeKey(initRandom);
 
-        var seed = Date.parse($scope.date);
-        if (isNaN(seed)) {
+        var date = Date.parse($scope.date);
+        if (isNaN(date)) {
             $scope.date = new Date();
-            seed = Date.parse($scope.date);
+            date = Date.parse($scope.date);
         }
+        var year = $scope.date.getFullYear();
+        var month = $scope.date.getMonth() + 1;
+        var day = $scope.date.getDate();
+        var seed = year * 10000 + month * 100 + day;
 
         var random = Math.seed(seed);
-        var rotors = RandomSort(random);
-        $scope.rotor[0] = rotors[0] + 1;
-        $scope.rotor[1] = rotors[1] + 1;
-        $scope.rotor[2] = rotors[2] + 1;
+        $scope.rotor = RandomSort(random);
         $scope.rotorKey[0] = String.fromCharCode(Math.floor(random() * 26) + chA);
         $scope.rotorKey[1] = String.fromCharCode(Math.floor(random() * 26) + chA);
         $scope.rotorKey[2] = String.fromCharCode(Math.floor(random() * 26) + chA);
@@ -70,7 +71,7 @@ enigmaApp.controller('EnigmaController', ['$scope', '$log', function ($scope, $l
     $scope.encode = function () {
         $scope.reset();
 
-        var code = $scope.transformKey();
+        var code = $scope.encodeKey();
         $scope.message = $scope.message.toUpperCase();
         for (var i = 0; i < $scope.message.length; ++i) {
             var ch = $scope.message[i];
@@ -92,7 +93,7 @@ enigmaApp.controller('EnigmaController', ['$scope', '$log', function ($scope, $l
         var key2 = "";
         $scope.key = "";
         $scope.code = $scope.code.toUpperCase();
-        var keyRead = 0;
+        //var keyRead = 0;
         var keyRead2 = 0;
         for (var i = 0; i < $scope.code.length; ++i) {
             var ch = $scope.code[i];
@@ -101,41 +102,41 @@ enigmaApp.controller('EnigmaController', ['$scope', '$log', function ($scope, $l
                 continue;
             }
 
-            if (keyRead < 3) {
+            /*if (keyRead < 3) {
                 $scope.key += ch;
                 ++keyRead;
 
                 if (keyRead == 3) {
-                    $scope.rotorKey[0] = $scope.key[0];
-                    $scope.rotorKey[1] = $scope.key[1];
-                    $scope.rotorKey[2] = $scope.key[2];
+                    //$scope.rotorKey[0] = $scope.key[0];
+                    //$scope.rotorKey[1] = $scope.key[1];
+                    //$scope.rotorKey[2] = $scope.key[2];
                 }
                 continue;
-            }
+            }*/
 
             $log.log("decode=========");
             ch = $scope.process(ch);
 
-            if (keyRead2 < 6) {
-                key2 += ch;
-                ++keyRead2;
+            //if (keyRead2 < 6) {
+            //    key2 += ch;
+            //    ++keyRead2;
 
-                if (keyRead2 == 6) {
-                    $scope.rotorKey[0] = key2[0];
-                    $scope.rotorKey[1] = key2[1];
-                    $scope.rotorKey[2] = key2[2];
-                }
-            }
-            else {
+            //    if (keyRead2 == 6) {
+            //        $scope.rotorKey[0] = key2[0];
+            //        $scope.rotorKey[1] = key2[1];
+            //        $scope.rotorKey[2] = key2[2];
+            //    }
+            //}
+            //else {
                 message += ch;
-            }
+            //}
         }
 
         $scope.message = message;
     };
-    $scope.transformKey = function () {
+    $scope.encodeKey = function () {
         var key = $scope.key.toUpperCase();
-        var code = key + " ";
+        var code = key;
         for (var j = 0; j < 2; ++j) {
             for (var i = 0; i < key.length; ++i) {
                 var ch = key[i];
@@ -143,7 +144,7 @@ enigmaApp.controller('EnigmaController', ['$scope', '$log', function ($scope, $l
                     continue;
                 }
 
-                $log.log("transformKey=========");
+                $log.log("encodeKey=========");
                 code += $scope.process(ch);
             }
         }
@@ -151,7 +152,27 @@ enigmaApp.controller('EnigmaController', ['$scope', '$log', function ($scope, $l
         $scope.rotorKey[0] = key[0];
         $scope.rotorKey[1] = key[1];
         $scope.rotorKey[2] = key[2];
-        return code + " ";
+        return code;
+    };
+    $scope.decodeKey = function () {
+        var key = $scope.key.toUpperCase();
+        var code = key;
+        for (var j = 0; j < 2; ++j) {
+            for (var i = 0; i < key.length; ++i) {
+                var ch = key[i];
+                if (!/^[A-Z]+$/i.test(ch)) {
+                    continue;
+                }
+
+                $log.log("decodeKey=========");
+                code += $scope.process(ch);
+            }
+        }
+
+        $scope.rotorKey[0] = key[0];
+        $scope.rotorKey[1] = key[1];
+        $scope.rotorKey[2] = key[2];
+        return code;
     };
     $scope.transformPlugboard = function (ch) {
         if (ch == $scope.plugboard1A) {
