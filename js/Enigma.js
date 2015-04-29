@@ -32,10 +32,9 @@ enigmaApp.controller('EnigmaController', ['$scope', '$log', function ($scope, $l
     $scope.code = "";
     $scope.reset = function () {
         var initRandom = Math.seed(42);
-        $scope.rotorTrans[1] = [];
+        $scope.rotorTrans[0] = MakeRotor(initRandom);
         $scope.rotorTrans[1] = MakeRotor(initRandom);
         $scope.rotorTrans[2] = MakeRotor(initRandom);
-        $scope.rotorTrans[3] = MakeRotor(initRandom);
         $scope.reflector = MakeReflector(initRandom);
         $scope.key = MakeKey(initRandom);
 
@@ -90,11 +89,10 @@ enigmaApp.controller('EnigmaController', ['$scope', '$log', function ($scope, $l
         $scope.reset();
 
         var message = "";
-        var key2 = "";
         $scope.key = "";
         $scope.code = $scope.code.toUpperCase();
-        //var keyRead = 0;
-        var keyRead2 = 0;
+        var key = "";
+        var keyRead = 0;
         for (var i = 0; i < $scope.code.length; ++i) {
             var ch = $scope.code[i];
             if (!/^[A-Z]+$/i.test(ch)) {
@@ -102,41 +100,70 @@ enigmaApp.controller('EnigmaController', ['$scope', '$log', function ($scope, $l
                 continue;
             }
 
-            /*if (keyRead < 3) {
-                $scope.key += ch;
-                ++keyRead;
-
-                if (keyRead == 3) {
-                    //$scope.rotorKey[0] = $scope.key[0];
-                    //$scope.rotorKey[1] = $scope.key[1];
-                    //$scope.rotorKey[2] = $scope.key[2];
-                }
-                continue;
-            }*/
-
             $log.log("decode=========");
             ch = $scope.process(ch);
 
-            //if (keyRead2 < 6) {
-            //    key2 += ch;
-            //    ++keyRead2;
+            if (keyRead < 6) {
+                key += ch;
+                ++keyRead;
 
-            //    if (keyRead2 == 6) {
-            //        $scope.rotorKey[0] = key2[0];
-            //        $scope.rotorKey[1] = key2[1];
-            //        $scope.rotorKey[2] = key2[2];
-            //    }
-            //}
-            //else {
-                message += ch;
-            //}
+                if (keyRead == 6) {
+                    $scope.rotorKey[0] = key[0];
+                    $scope.rotorKey[1] = key[1];
+                    $scope.rotorKey[2] = key[2];
+                    
+                    if ( key[0] != key[3] ||key[1] != key[4] || key[2] != key[5]) {
+                        alert( "[ERROR] Key not match: " + key );
+                    }
+                }
+                
+                continue;
+            }
+            
+            message += ch;
         }
 
         $scope.message = message;
     };
+    $scope.test = function () {
+        $scope.reset();
+
+        for (var i = 0; i < 26; ++i) {
+            var chFrom = String.fromCharCode(i + chA);
+            var chTo = $scope.transformPlugboard(chFrom);
+            var chBack = $scope.transformPlugboard(chTo);
+            
+            if ( chFrom != chBack){
+                alert( "Plugboard Error!" );
+            }
+        }
+        alert( "Plugboard Test Done!" );
+        
+        for (var i = 0; i < 26; ++i) {
+            var chFrom = String.fromCharCode(i + chA);
+            var chTo =  $scope.transformReflector(chFrom);
+            var chBack =  $scope.transformReflector(chTo);
+        
+            if ( chFrom != chBack){
+                alert( "Reflector Error!" );
+            }
+        }
+        alert( "Reflector Test Done!" );
+        
+        for (var i = 0; i < 26; ++i) {
+            var chFrom = String.fromCharCode(i + chA);
+            var chTo =  $scope.transformRotor($scope.rotorTrans[0], "A", chFrom);
+            var chBack =  $scope.transformRotor($scope.rotorTrans[0], "A", chTo);
+        
+            if ( chFrom != chBack){
+                alert( "Rotor Error!" );
+            }
+        }
+        alert( "Rotor Test Done!" );
+    };
     $scope.encodeKey = function () {
         var key = $scope.key.toUpperCase();
-        var code = key;
+        var code = "";
         for (var j = 0; j < 2; ++j) {
             for (var i = 0; i < key.length; ++i) {
                 var ch = key[i];

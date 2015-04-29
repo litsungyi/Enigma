@@ -41,20 +41,21 @@
           <div>
               <input type="date" name="PasswordBook" id="PasswordBook" ng-model="date" />
               <input type="button" ng-click="reset()" value="Set" />
+              <input type="button" ng-click="test()" value="Test" />
           </div>
           <h2>Rotors</h2>
           <div>
             <span class="Rotors">
-              <input type="text" name="Rotor1" id="Rotor1" class="Rotor" ng-model="rotor[0]+1" readonly />
+              <input type="text" name="Rotor1" id="Rotor1" class="Rotor" ng-model="rotor[0]" readonly />
               <input type="text" name="RotorKey1" id="RotorKey1" class="Rotor" ng-model="rotorKey[0]" readonly />
-              <input type="text" name="Rotor2" id="Rotor2" class="Rotor" ng-model="rotor[1]+1" readonly />
+              <input type="text" name="Rotor2" id="Rotor2" class="Rotor" ng-model="rotor[1]" readonly />
               <input type="text" name="RotorKey2" id="RotorKey2" class="Rotor" ng-model="rotorKey[1]" readonly />
-              <input type="text" name="Rotor3" id="Rotor3" class="Rotor" ng-model="rotor[2]+1" readonly />
+              <input type="text" name="Rotor3" id="Rotor3" class="Rotor" ng-model="rotor[2]" readonly />
               <input type="text" name="RotorKey3" id="RotorKey3" class="Rotor" ng-model="rotorKey[2]" readonly />
             </span>
           </div>
         
-          <!--h2>Plugboard</h2-->
+          <h2>Plugboard</h2>
           <div>
             <span class="Plugboard Plugboard1">
               <label for="Plugboard1">#1</label>
