@@ -43,6 +43,7 @@ enigmaApp.controller('EnigmaController', ['$scope', '$log', function ($scope, $l
             $scope.date = new Date();
             date = Date.parse($scope.date);
         }
+
         var year = $scope.date.getFullYear();
         var month = $scope.date.getMonth() + 1;
         var day = $scope.date.getDate();
@@ -100,7 +101,6 @@ enigmaApp.controller('EnigmaController', ['$scope', '$log', function ($scope, $l
                 continue;
             }
 
-            $log.log("decode=========");
             ch = $scope.process(ch);
 
             if (keyRead < 6) {
@@ -125,54 +125,6 @@ enigmaApp.controller('EnigmaController', ['$scope', '$log', function ($scope, $l
 
         $scope.message = message;
     };
-    $scope.test = function () {
-        $scope.reset();
-
-        $log.log( "Plugboard ================================");
-        for (var i = 0; i < 26; ++i) {
-            var chFrom1 = IndexToChar(i);
-            var chTo1 = $scope.transformPlugboard(chFrom1);
-            var chBack1 = $scope.transformPlugboard(chTo1);
-
-            if (chFrom1 != chBack1) {
-                $log.log( chFrom1 + " >> " + chTo1 + " >> " + chBack1);
-            }
-        }
-        
-        $log.log( "Reflector ================================");
-        for (var j = 0; j < 26; ++j) {
-            var chFrom2 = IndexToChar(j);
-            var chTo2 = $scope.transformReflector(chFrom2);
-            var chBack2 = $scope.transformReflector(chTo2);
-
-            if (chFrom2 != chBack2) {
-                $log.log( chFrom2 + " >> " + chTo2 + " >> " + chBack2);
-            }
-        }
-
-        $log.log( "RotorA ================================");
-        for (var k = 0; k < 26; ++k) {
-            var chFrom3 = IndexToChar(k);
-            var chTo3 = $scope.transformRotor($scope.rotorTrans[0], "A", chFrom3, false);
-            var chBack3 = $scope.transformRotor($scope.rotorTrans[0], "A", chTo3, true);
-
-            if (chFrom3 != chBack3) {
-                $log.log( chFrom3 + " >> " + chTo3 + " >> " + chBack3);
-            }
-        }
-        
-        $log.log( "RotorB ================================");
-        for (var l = 0; l < 26; ++l) {
-            var chFrom4 = IndexToChar(l);
-            var chTo4 = $scope.transformRotor($scope.rotorTrans[0], "B", chFrom4, false);
-            var chBack4 = $scope.transformRotor($scope.rotorTrans[0], "B", chTo4, true);
-
-            if (chFrom4 != chBack4) {
-                $log.log( chFrom4 + " >> " + chTo4 + " >> " + chBack4);
-            }
-        }
-        alert("Rotor Test Done!");
-    };
     $scope.encodeKey = function () {
         var key = $scope.key.toUpperCase();
         var code = "";
@@ -183,7 +135,6 @@ enigmaApp.controller('EnigmaController', ['$scope', '$log', function ($scope, $l
                     continue;
                 }
 
-                $log.log("encodeKey=========");
                 code += $scope.process(ch);
             }
         }
@@ -203,7 +154,6 @@ enigmaApp.controller('EnigmaController', ['$scope', '$log', function ($scope, $l
                     continue;
                 }
 
-                $log.log("decodeKey=========");
                 code += $scope.process(ch);
             }
         }
@@ -258,17 +208,17 @@ enigmaApp.controller('EnigmaController', ['$scope', '$log', function ($scope, $l
         var offset = revert ? 0 : CharToIndex(key);
         var index = (CharToIndex(ch) + offset + 26) % 26;
         var alpha = IndexToChar(index);
-        var newIndex = index + ( revert ? rotor[alpha].revertOffset : rotor[alpha].offset );
-        newIndex = ( newIndex + 26 ) % 26;
+        var newIndex = index + (revert ? rotor[alpha].revertOffset : rotor[alpha].offset);
+        newIndex = (newIndex + 26) % 26;
         offset = revert ? -CharToIndex(key) : 0;
-        newIndex = revert ? ( newIndex + offset + 26 ) % 26  : newIndex;
-        return IndexToChar( newIndex );
+        newIndex = revert ? (newIndex + offset + 26) % 26 : newIndex;
+        return IndexToChar(newIndex);
     };
     $scope.transformReflector = function (ch) {
         return $scope.reflector[ch];
     };
     $scope.advanceRotor = function () {
-        var next = CharToIndex( $scope.rotorKey[0]) + 1;
+        var next = CharToIndex($scope.rotorKey[0]) + 1;
         if (next < 26) {
             $scope.rotorKey[0] = IndexToChar(next);
             return;
@@ -277,7 +227,7 @@ enigmaApp.controller('EnigmaController', ['$scope', '$log', function ($scope, $l
         next = 0;
         $scope.rotorKey[0] = IndexToChar(next);
 
-        next = CharToIndex( $scope.rotorKey[1] ) + 1;
+        next = CharToIndex($scope.rotorKey[1]) + 1;
         if (next < 26) {
             $scope.rotorKey[1] = IndexToChar(next);
             return;
@@ -286,7 +236,7 @@ enigmaApp.controller('EnigmaController', ['$scope', '$log', function ($scope, $l
         next = 0;
         $scope.rotorKey[1] = IndexToChar(next);
 
-        next = CharToIndex( $scope.rotorKey[2] ) + 1;
+        next = CharToIndex($scope.rotorKey[2]) + 1;
         if (next < 26) {
             $scope.rotorKey[2] = IndexToChar(next);
             return;
@@ -296,26 +246,15 @@ enigmaApp.controller('EnigmaController', ['$scope', '$log', function ($scope, $l
         $scope.rotorKey[2] = IndexToChar(next);
     };
     $scope.process = function (ch) {
-        $log.log("$scope.rotorKey: " + $scope.rotorKey[0] + $scope.rotorKey[1] + $scope.rotorKey[2]);
-        $log.log("ch: " + ch);
         ch = $scope.transformPlugboard(ch);
-        $log.log("transformPlugboard: " + ch);
         ch = $scope.transformRotor($scope.rotorTrans[$scope.rotor[0]], $scope.rotorKey[0], ch, false);
-        $log.log("transformRotor1: " + ch);
         ch = $scope.transformRotor($scope.rotorTrans[$scope.rotor[1]], $scope.rotorKey[1], ch, false);
-        $log.log("transformRotor2: " + ch);
         ch = $scope.transformRotor($scope.rotorTrans[$scope.rotor[2]], $scope.rotorKey[2], ch, false);
-        $log.log("transformRotor3: " + ch);
         ch = $scope.transformReflector(ch);
-        $log.log("transformReflector: " + ch);
         ch = $scope.transformRotor($scope.rotorTrans[$scope.rotor[2]], $scope.rotorKey[2], ch, true);
-        $log.log("transformRotor3: " + ch);
         ch = $scope.transformRotor($scope.rotorTrans[$scope.rotor[1]], $scope.rotorKey[1], ch, true);
-        $log.log("transformRotor2: " + ch);
         ch = $scope.transformRotor($scope.rotorTrans[$scope.rotor[0]], $scope.rotorKey[0], ch, true);
-        $log.log("transformRotor1: " + ch);
         ch = $scope.transformPlugboard(ch);
-        $log.log("transformPlugboard: " + ch);
         $scope.advanceRotor();
         return ch;
     };
@@ -357,20 +296,20 @@ function MakeRotor(random) {
         var index1 = CharToIndex(key1);
         var key2 = keys2[count];
         var index2 = CharToIndex(key2);
-        
-        offsets[key1] = index2-index1;
-        revertOffsets[key2] = index1-index2;
+
+        offsets[key1] = index2 - index1;
+        revertOffsets[key2] = index1 - index2;
     }
 
     var rotor = {};
     for (var index = 0; index < 26; ++index) {
         var key = IndexToChar(index);
-        rotor[ key ] = {
+        rotor[key] = {
             offset: offsets[key],
             revertOffset: revertOffsets[key]
         };
     }
-    
+
     return rotor;
 }
 
