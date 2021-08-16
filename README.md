@@ -2,9 +2,9 @@
 
 This is a web-based "Enigma Simulator", reference come from below link.
 
-You can visit [This Project's GitHub Page](http://litsungyi.github.io/Enigma/) to try this.
+You can visit [This Project's GitHub Page](http://tsungyi.li/Enigma/) to try this.
 
-![恩格瑪機](http://litsungyi.github.io/Enigma/images/EnigmaMachine.jpg)
+![恩格瑪機](http://tsungyi.li/Enigma/images/EnigmaMachine.jpg)
 
 (Image Source: [Flickr](https://www.flickr.com/photos/visualtheology))
 
